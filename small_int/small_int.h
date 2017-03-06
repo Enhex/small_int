@@ -53,6 +53,7 @@ template<long long max_value, long long min_value>
 struct small_int<max_value, min_value, typename std::enable_if<(
 	max_value > min_value &&
 	min_value < 0 &&
+	min_value >= std::numeric_limits<char>::min() &&
 	max_value <= std::numeric_limits<char>::max()
 	)>::type> :
 	public small_int_base<char> {
@@ -77,10 +78,13 @@ struct small_int<max_value, min_value, typename std::enable_if<(
 template<long long max_value, long long min_value>
 struct small_int<max_value, min_value, typename std::enable_if<(
 	max_value > min_value &&
-	min_value < 0 &&
-	max_value > std::numeric_limits<char>::max() &&
-	max_value <= std::numeric_limits<short>::max()
-	)>::type> :
+	min_value < 0 && ((
+		min_value < std::numeric_limits<char>::min() &&
+		min_value >= std::numeric_limits<short>::min())
+		|| (
+		max_value > std::numeric_limits<char>::max() &&
+		max_value <= std::numeric_limits<short>::max())
+	))>::type> :
 	public small_int_base<short> {
 	using small_int_base::small_int_base;
 };
@@ -104,10 +108,13 @@ struct small_int<max_value, min_value, typename std::enable_if<(
 template<long long max_value, long long min_value>
 struct small_int<max_value, min_value, typename std::enable_if<(
 	max_value > min_value &&
-	min_value < 0 &&
-	max_value > std::numeric_limits<short>::max() &&
-	max_value <= std::numeric_limits<int>::max()
-	)>::type> :
+	min_value < 0 && ((
+		min_value < std::numeric_limits<short>::min() &&
+		min_value >= std::numeric_limits<int>::min())
+		|| (
+		max_value > std::numeric_limits<short>::max() &&
+		max_value <= std::numeric_limits<int>::max())
+	))>::type> :
 	public small_int_base<int> {
 	using small_int_base::small_int_base;
 };
@@ -131,10 +138,13 @@ struct small_int<max_value, min_value, typename std::enable_if<(
 template<long long max_value, long long min_value>
 struct small_int<max_value, min_value, typename std::enable_if<(
 	max_value > min_value &&
-	min_value < 0 &&
-	max_value > std::numeric_limits<int>::max() &&
-	max_value <= std::numeric_limits<long>::max()
-	)>::type> :
+	min_value < 0 && ((
+		min_value < std::numeric_limits<int>::min() &&
+		min_value >= std::numeric_limits<long>::min())
+		|| (
+		max_value > std::numeric_limits<int>::max() &&
+		max_value <= std::numeric_limits<long>::max())
+	))>::type> :
 	public small_int_base<long> {
 	using small_int_base::small_int_base;
 };
@@ -158,10 +168,13 @@ struct small_int<max_value, min_value, typename std::enable_if<(
 template<long long max_value, long long min_value>
 struct small_int<max_value, min_value, typename std::enable_if<(
 	max_value > min_value &&
-	min_value < 0 &&
-	max_value > std::numeric_limits<long>::max() &&
-	max_value <= std::numeric_limits<long long>::max()
-	)>::type> :
+	min_value < 0 && ((
+		min_value < std::numeric_limits<long>::min() &&
+		min_value >= std::numeric_limits<long long>::min())
+		|| (
+		max_value > std::numeric_limits<long>::max() &&
+		max_value <= std::numeric_limits<long long>::max())
+	))>::type> :
 	public small_int_base<long long> {
 	using small_int_base::small_int_base;
 };
@@ -179,5 +192,13 @@ struct small_int<max_value, min_value, typename std::enable_if<(
 	using small_int_base::small_int_base;
 };
 
+
+// Marco for directly using the underlying type
+#define EXPAND(x) x
+#define GET_SMALL_INT_MACRO(_1, _2, NAME, ...) NAME
+#define SMALL_INT(...) EXPAND(GET_SMALL_INT_MACRO(__VA_ARGS__, SMALL_INT_2, SMALL_INT_1)(__VA_ARGS__))
+
+#define SMALL_INT_1(max_value) decltype(small_int<max_value>::v)
+#define SMALL_INT_2(max_value, min_value) decltype(small_int<max_value, min_value>::v)
 
 #endif//small_int_h
