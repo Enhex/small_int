@@ -4,26 +4,26 @@
 using namespace std;
 
 template<long long max, long long min = 0>
-void print_small_int()
+void print_int()
 {
-	cout << "(max=" << max << ", min=" << min << ") -> " << typeid(small_int<max, min>).name() << " " << sizeof(small_int<max, min>) << endl;
+	cout << "(max=" << max << ", min=" << min << ") -> " << typeid(integer<max, min>).name() << " " << sizeof(integer<max, min>) << endl;
 }
 
 template<unsigned long long max>
-void print_small_uint()
+void print_uint()
 {
-	cout << "max=" << max << " -> " << typeid(small_int<max>).name() << " " << sizeof(small_int<max>) << endl;
+	cout << "max=" << max << " -> " << typeid(integer<max>).name() << " " << sizeof(integer<max>) << endl;
 }
 
-#define PRINT_TYPE_UINT(type) cout << "(" << #type << ") "; print_small_uint<numeric_limits<type>::max()>()
-#define PRINT_TYPE_INT(type) cout << "(" << #type << ") "; print_small_int<numeric_limits<type>::max(), numeric_limits<type>::min()>()
-#define PRINT_TYPE_INT_MIN(type) cout << "(" << #type << ") "; print_small_int<0, numeric_limits<type>::min()>()
+#define PRINT_TYPE_UINT(type) cout << "(" << #type << ") "; print_uint<numeric_limits<type>::max()>()
+#define PRINT_TYPE_INT(type) cout << "(" << #type << ") "; print_int<numeric_limits<type>::max(), numeric_limits<type>::min()>()
+#define PRINT_TYPE_INT_MIN(type) cout << "(" << #type << ") "; print_int<0, numeric_limits<type>::min()>()
 
 int main()
 {
 	// unsigned
 	cout << endl << "unsigned:" << endl;
-	print_small_uint<1>();
+	print_uint<1>();
 	PRINT_TYPE_UINT(unsigned char);
 	PRINT_TYPE_UINT(unsigned short);
 	PRINT_TYPE_UINT(unsigned int);
@@ -32,10 +32,10 @@ int main()
 
 	// signed
 	cout << endl << "signed:" << endl;
-	print_small_int<-1, -2>();
-	print_small_int<0, -1>();
-	print_small_int<1, -1>();
-	print_small_int<1, -1000>();
+	print_int<-1, -2>();
+	print_int<0, -1>();
+	print_int<1, -1>();
+	print_int<1, -1000>();
 	cout << endl;
 	PRINT_TYPE_INT(char);
 	PRINT_TYPE_INT(short);
@@ -50,16 +50,7 @@ int main()
 	PRINT_TYPE_INT_MIN(long);
 	PRINT_TYPE_INT_MIN(long long);
 
-	// access
-	cout << endl << "access:" << endl;
-	unsigned char t = 1;
-	small_int<100> w{ t };
-	small_int<100> x(t);
-	small_int<100> y = 2;
-	auto z = w + x + y;
-	cout << z << endl;
-
 	// constexpr
 	constexpr unsigned ce = 10;
-	small_int<ce> a = ce;
+	integer<ce> a = ce;
 }
