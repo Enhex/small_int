@@ -54,9 +54,18 @@ int main()
 	constexpr unsigned ce = 10;
 	integer<ce> a = ce;
 
+	cout << endl;
+
 	int_least<100> least;
 	cout << "least: " << typeid(least).name() << endl;
-
 	int_fast<1000> fast;
 	cout << "fast: " << typeid(fast).name() << endl;
+
+	cout << endl;
+
+	// range values order doesn't matter
+	integer<100, -100> range = 1;
+	integer<-100, 100> flipped_range = 1;
+	cout << "range: " << typeid(range).name() << endl;
+	cout << "flipped_range: " << typeid(flipped_range).name() << endl;
 }

@@ -31,35 +31,52 @@ namespace details
 		),
 		integer_tag<T>, integer_t<max_value, min_value, Ts...>> {
 	};
+
+
+	template<long long first_value, long long second_value>
+	struct min {
+		static constexpr long long value = first_value < second_value ? first_value : second_value;
+	};
+	template<long long first_value, long long second_value>
+	struct max {
+		static constexpr long long value = first_value > second_value ? first_value : second_value;
+	};
+
+	// used to remove the need to sort the values to min/max and access ::type
+	//NOTE: First type in the list to be big enough to contain the range is picked, so order matters.
+	//NOTE: first/second values will are sorted into min/max values, so their ordered doesn't matter.
+	template <long long first_value, long long second_value, typename... Ts>
+	using alias_base = typename details::integer_t<
+		details::max<first_value, second_value>::value,
+		details::min<first_value, second_value>::value,
+		Ts...>::type;
 }
 
-// used to remove the need to access ::type
-//NOTE: First type in the list to be big enough to contain the range is picked, so order matters.
-template <long long max_value, long long min_value = 0>
-using integer = typename details::integer_t<max_value, min_value
+template <long long first_value, long long second_value = 0>
+using integer = typename details::alias_base<first_value, second_value
 	,unsigned char, char
 	,unsigned short, short
 	,unsigned int, int
 	,unsigned long, long
 	,unsigned long long, long long
->::type;
+>;
 
 // least
-template <long long max_value, long long min_value = 0>
-using int_least = typename details::integer_t<max_value, min_value
+template <long long first_value, long long second_value = 0>
+using int_least = typename details::alias_base<first_value, second_value
 	,uint_least8_t, int_least8_t
 	,uint_least16_t, int_least16_t
 	,uint_least32_t, int_least32_t
 	,uint_least64_t, int_least64_t
->::type;
+>;
 
 // fast
-template <long long max_value, long long min_value = 0>
-using int_fast = typename details::integer_t<max_value, min_value
+template <long long first_value, long long second_value = 0>
+using int_fast = typename details::alias_base<first_value, second_value
 	,uint_fast8_t, int_fast8_t
 	,uint_fast16_t, int_fast16_t
 	,uint_fast32_t, int_fast32_t
 	,uint_fast64_t, int_fast64_t
->::type;
+>;
 
 #endif//small_int_h
