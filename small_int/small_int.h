@@ -4,6 +4,7 @@
 
 #include <type_traits>
 #include <limits>
+#include <cstdint>
 
 
 /*
@@ -33,6 +34,7 @@ namespace details
 }
 
 // used to remove the need to access ::type
+//NOTE: First type in the list to be big enough to contain the range is picked, so order matters.
 template <long long max_value, long long min_value = 0>
 using integer = typename details::integer_t<max_value, min_value
 	,unsigned char, char
@@ -42,5 +44,22 @@ using integer = typename details::integer_t<max_value, min_value
 	,unsigned long long, long long
 >::type;
 
+// least
+template <long long max_value, long long min_value = 0>
+using int_least = typename details::integer_t<max_value, min_value
+	,uint_least8_t, int_least8_t
+	,uint_least16_t, int_least16_t
+	,uint_least32_t, int_least32_t
+	,uint_least64_t, int_least64_t
+>::type;
+
+// fast
+template <long long max_value, long long min_value = 0>
+using int_fast = typename details::integer_t<max_value, min_value
+	,uint_fast8_t, int_fast8_t
+	,uint_fast16_t, int_fast16_t
+	,uint_fast32_t, int_fast32_t
+	,uint_fast64_t, int_fast64_t
+>::type;
 
 #endif//small_int_h

@@ -53,4 +53,10 @@ int main()
 	// constexpr
 	constexpr unsigned ce = 10;
 	integer<ce> a = ce;
+
+	int_least<100> least;
+	cout << "least: " << typeid(least).name() << endl;
+
+	int_fast<1000> fast;
+	cout << "fast: " << typeid(fast).name() << endl;
 }
