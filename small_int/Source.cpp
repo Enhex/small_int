@@ -6,13 +6,15 @@ using namespace std;
 template<long long max, long long min = 0>
 void print_int()
 {
-	cout << "(max=" << max << ", min=" << min << ") -> " << typeid(integer<max, min>).name() << " " << sizeof(integer<max, min>) << endl;
+	cout << "(max=" << max << ", min=" << min << ") -> " <<
+			typeid(integer<max, min>).name() << " " << sizeof(integer<max, min>) << endl;
 }
 
 template<unsigned long long max>
 void print_uint()
 {
-	cout << "max=" << max << " -> " << typeid(integer<max>).name() << " " << sizeof(integer<max>) << endl;
+	cout << "max=" << max << " -> " <<
+			typeid(integer<max>).name() << " " << sizeof(integer<max>) << endl;
 }
 
 #define PRINT_TYPE_UINT(type) cout << "(" << #type << ") "; print_uint<numeric_limits<type>::max()>()
@@ -56,16 +58,19 @@ int main()
 
 	cout << endl;
 
-	int_least<100> least;
-	cout << "least: " << typeid(least).name() << endl;
-	int_fast<1000> fast;
-	cout << "fast: " << typeid(fast).name() << endl;
+	constexpr auto max_value = 1000;
+	int_least<max_value> least;
+	cout << "least (" << max_value << ") -> " << typeid(least).name() << endl;
+	int_fast<max_value> fast;
+	cout << "fast (" << max_value << ") -> " << typeid(fast).name() << endl;
 
 	cout << endl;
 
 	// range values order doesn't matter
 	integer<100, -100> range = 1;
 	integer<-100, 100> flipped_range = 1;
-	cout << "range: " << typeid(range).name() << endl;
-	cout << "flipped_range: " << typeid(flipped_range).name() << endl;
+	cout << "range -> " << typeid(range).name() << endl;
+	cout << "flipped_range -> " << typeid(flipped_range).name() << endl;
+
+	cout << endl;
 }
