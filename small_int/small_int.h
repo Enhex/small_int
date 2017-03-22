@@ -17,16 +17,18 @@ namespace details
 		using type = T;
 	};
 
+	//TODO C++17: use auto non-type template parameter for values
 	template<long long max_value, long long min_value, typename...>
 	struct integer_t {
-		static_assert(max_value > min_value, "can't contain the value range");
+		static_assert(true, "can't contain the value range");
 	};
 
 	template<long long max_value, long long min_value, typename T, typename... Ts>
 	struct integer_t<max_value, min_value, T, Ts...> : std::conditional_t<(
-			max_value > min_value &&
+			// check if inside the integer type's range
 			max_value <= std::numeric_limits<T>::max() &&
 			min_value >= std::numeric_limits<T>::min() &&
+			// if integer type is unsigned, make sure the values aren't negative
 			(std::is_signed<T>::value || (max_value >= 0 && min_value >= 0))
 		),
 		integer_tag<T>, integer_t<max_value, min_value, Ts...>> {
