@@ -68,9 +68,9 @@ namespace details
 		static constexpr long long value = first_value > second_value ? first_value : second_value;
 	};
 
-	// used to remove the need to sort the values to min/max and access ::type
+	// used to sort the values to min/max and remove the need to access ::type
 	//NOTE: First type in the list to be big enough to contain the range is picked, so order matters.
-	//NOTE: first/second values will are sorted into min/max values, so their ordered doesn't matter.
+	//NOTE: first/second values will are sorted into min/max values, so their order doesn't matter.
 	template <long long first_value, long long second_value, typename... Ts>
 	using alias_base = typename details::integer_t<
 		details::max<first_value, second_value>::value,
